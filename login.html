@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Akıllı Park</title>
+ 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .btn-primary {
+            background-color: #4a90e2; /* Blue */
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #a0aec0; /* Light gray */
+            color: white;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="card p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-6 text-gray-800 text-center">Giriş Yap</h2>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Kullanıcı Adı:</label>
+                <input type="text" id="username" placeholder="Kullanıcı Adınızı Girin" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Şifre:</label>
+                <input type="password" id="password" placeholder="Şifrenizi Girin" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+            </div>
+            <div class="flex justify-between items-center">
+                <button type="submit" class="btn-primary px-6 py-3 rounded-md font-medium text-lg">Giriş Yap</button>
+                <a href="index.html" class="btn-secondary px-6 py-3 rounded-md font-medium text-lg">Ana Sayfaya Dön</a>
+            </div>
+        </form>
+        <div id="messageBox" class="mt-4 p-3 rounded-md hidden"></div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDocs, collection, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase config and app ID
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Sign in anonymously or with custom token on page load
+        async function authenticateUser() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    console.log("Custom token ile giriş yapıldı.");
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Anonim olarak giriş yapıldı.");
+                }
+            } catch (error) {
+                console.error("Firebase kimlik doğrulama hatası:", error);
+            }
+        }
+        authenticateUser();
+
+
+        const loginForm = document.getElementById('loginForm');
+        const messageBox = document.getElementById('messageBox');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            messageBox.classList.add('hidden'); // Hide previous messages
+
+            // Simple validation (can be expanded)
+            if (!username || !password) {
+                showMessage('Lütfen tüm alanları doldurunuz.', 'bg-yellow-500');
+                return;
+            }
+
+            try {
+               
+                const currentUser = auth.currentUser;
+                if (!currentUser) {
+                    showMessage('Kullanıcı kimliği doğrulanamadı. Lütfen sayfayı yenileyin.', 'bg-red-500');
+                    return;
+                }
+                const userId = currentUser.uid;
+
+                // Example: User states they parked at 'B3' (which is 'C3/62' in our dummy data for now)
+                // We find the current C3/62 entry and mark it as 'Dolu' (Full)
+                const parkStatusCollectionRef = collection(db, `artifacts/${appId}/public/data/parkStatus`);
+                const existingDocQuery = query(parkStatusCollectionRef, where("block", "==", "C3/62"));
+                const querySnapshot = await getDocs(existingDocQuery);
+
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach(async (d) => {
+                        const docRef = doc(db, `artifacts/${appId}/public/data/parkStatus`, d.id);
+                        await setDoc(docRef, {
+                            status: "Dolu",
+                            percentage: 100,
+                            time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
+                            parkedBy: userId // Optionally store who parked
+                        }, { merge: true });
+                        console.log("Park yeri C3/62 güncellendi.");
+                    });
+                    showMessage('Giriş başarılı ve park yeriniz güncellendi! Ana sayfaya yönlendiriliyorsunuz...', 'bg-green-500');
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Redirect to home page
+                    }, 2000);
+                } else {
+                    showMessage('Giriş başarılı ancak belirtilen park yeri bulunamadı.', 'bg-yellow-500');
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Redirect to home page even if parking update failed
+                    }, 2000);
+                }
+
+            } catch (error) {
+                console.error("Giriş hatası:", error);
+                showMessage('Giriş başarısız. Lütfen kullanıcı adınızı ve şifrenizi kontrol edin.', 'bg-red-500');
+            }
+        });
+
+        function showMessage(message, className) {
+            messageBox.textContent = message;
+            messageBox.className = `mt-4 p-3 rounded-md text-white ${className}`;
+            messageBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
