@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akıllı Park</title>
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 1rem;
+        }
+        .header-bg {
+            background-color: #2d3748; /* Dark gray for header */
+        }
+        .btn-primary {
+            background-color: #4a90e2; /* Blue */
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #a0aec0; /* Light gray */
+            color: white;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .table-header {
+            background-color: #e2e8f0; /* Light blue-gray */
+        }
+        .footer-bg {
+            background-color: #2d3748; /* Dark gray for footer */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  
+    <header class="header-bg py-4 shadow-md">
+        <div class="container flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="text-white text-2xl font-bold">Logo</div>
+                <nav class="hidden md:flex space-x-6 text-white">
+                    <a href="#" class="hover:text-gray-300">Ana Sayfa</a>
+                 
+                    <a href="https://www.google.com/maps/search/otoparklar" target="_blank" class="hover:text-gray-300">Konum</a>
+                    
+                    <a href="https://www.google.com/maps" target="_blank" class="hover:text-gray-300">Harita</a>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="text" placeholder="ARA" class="px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+                <button class="btn-primary px-4 py-2 rounded-md font-medium">Bul</button>
+            </div>
+        </div>
+    </header>
+
+
+    <main class="flex-grow container mt-8">
+   
+        <section class="card p-6 mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex space-x-4">
+          
+                    <a href="login.html" class="btn-primary px-6 py-3 rounded-md font-medium text-lg">Giriş</a>
+                    
+                    <a href="reservation.html" class="btn-secondary px-6 py-3 rounded-md font-medium text-lg">Randevu</a>
+                </div>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">ParkSmartApp</h1>
+            <p class="text-gray-600 mb-4">ParkSmart uygulamasını indirmek için buraya <a href="#" class="text-blue-500 hover:underline">tıklayınız</a>.</p>
+            <button class="btn-primary px-6 py-3 rounded-md font-medium text-lg">Daha Fazla</button>
+        </section>
+
+    
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div class="card p-6 flex flex-col items-center justify-center min-h-[150px]">
+                
+                <img src="https://placehold.co/100x100/4A90E2/FFFFFF?text=AVM" alt="Alışveriş Merkezleri" class="mb-4 rounded-full">
+                <h2 class="text-xl font-semibold text-gray-700">ALIŞVERİŞ MERKEZLERİ</h2>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center min-h-[150px]">
+               
+                <img src="https://placehold.co/100x100/4A90E2/FFFFFF?text=Hastane" alt="Hastaneler" class="mb-4 rounded-full">
+                <h2 class="text-xl font-semibold text-gray-700">HASTANELER</h2>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center min-h-[150px]">
+               
+                <img src="https://placehold.co/100x100/4A90E2/FFFFFF?text=Park" alt="Otoparklar" class="mb-4 rounded-full">
+                <h2 class="text-xl font-semibold text-gray-700">OTOPARKLAR</h2>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+           
+            <section class="card p-6 col-span-1">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">BAĞLANTILAR</h2>
+                <ul class="space-y-2 text-blue-600">
+                    <li><a href="https://github.com/google" target="_blank" class="hover:underline">Github</a></li>
+                    <li><a href="https://linkedin.com/company/google" target="_blank" class="hover:underline">Linkedin</a></li>
+                    
+                    <li><a href="https://www.google.com/maps" target="_blank" class="hover:underline">Harita</a></li>
+                </ul>
+            </section>
+
+          
+            <section class="card p-6 col-span-2">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Park Durumu</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 rounded-lg overflow-hidden">
+                        <thead class="table-header">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">#</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Konum</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Zaman</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Durum</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Kat/Blok</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                        
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">1</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Etlik Hastanesi</td>
+                                <td class="px-6 py-4 whitespace-nowrap">13:20</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-green-600 font-semibold">Boş (%60)</td>
+                                <td class="px-6 py-4 whitespace-nowrap">A1</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">2</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Ankamall AVM</td>
+                                <td class="px-6 py-4 whitespace-nowrap">11:30</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-red-600 font-semibold">Dolu (%100)</td>
+                                <td class="px-6 py-4 whitespace-nowrap">B2/41</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">3</td>
+                                <td class="px-6 py-4 whitespace-nowrap">Metro Market</td>
+                                <td class="px-6 py-4 whitespace-nowrap">12:10</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-yellow-600 font-semibold">Az Boş (%20)</td>
+                                <td class="px-6 py-4 whitespace-nowrap">C3/62</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+  
+        <section class="card p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Bilgi</h2>
+            <h3 class="text-lg font-medium text-gray-800 mb-2">ParkSmart Nedir?</h3>
+            <p class="text-gray-600">
+                Kalabalık şehirde yaşarken otopark bulmak gittikçe zorlaşıyor. SmartPark ile otopark sistemini bir randevu sistemiyle birleştirerek,
+                insanların kolayca yer ayırtmasını ve park etme işini daha düzenli hale getirmeyi amaçlamaktadır.
+            </p>
+        </section>
+
+    
+        <section class="card p-6 mt-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Email</h2>
+            <input type="email" placeholder="E-posta adresinizi giriniz" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+            <button class="btn-primary mt-4 px-6 py-3 rounded-md font-medium text-lg">Abone Ol</button>
+        </section>
+
+      
+
+       
+
+    </main>
+
+
+    <footer class="footer-bg py-8 mt-8">
+        <div class="container text-center">
+            <p>&copy; 2023 Akıllı Park. Tüm Hakları Saklıdır.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+       
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, addDoc, serverTimestamp, getDocs, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+   
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let userId = null; 
+
+   
+        let parkStatusData = [
+            { id: 1, location: "Etlik Hastanesi", time: "13:20", status: "Boş", percentage: 60, block: "A1" },
+            { id: 2, location: "Ankamall AVM", time: "11:30", status: "Dolu", percentage: 100, block: "B2/41" },
+            { id: 3, location: "Metro Market", time: "12:10", status: "Az Boş", percentage: 20, block: "C3/62" }
+        ];
+
+        
+        const renderParkStatus = (data) => {
+            const tbody = document.querySelector('.min-w-full tbody');
+            tbody.innerHTML = ''; 
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                let statusClass = '';
+                if (item.percentage > 50) {
+                    statusClass = 'text-green-600';
+                } else if (item.percentage > 0) {
+                    statusClass = 'text-yellow-600';
+                } else {
+                    statusClass = 'text-red-600';
+                }
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${item.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.location}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.time}</td>
+                    <td class="px-6 py-4 whitespace-nowrap ${statusClass} font-semibold">${item.status} (%${item.percentage})</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.block}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+       
+        renderParkStatus(parkStatusData);
+
+     
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+                console.log("Kullanıcı giriş yaptı:", userId);
+
+        
+       
+                const parkStatusRef = collection(db, `artifacts/${appId}/public/data/parkStatus`);
+                onSnapshot(parkStatusRef, (snapshot) => {
+                    const updatedData = [];
+                    snapshot.forEach(doc => {
+                        updatedData.push(doc.data());
+                    });
+            
+                    updatedData.sort((a, b) => a.id - b.id);
+                    parkStatusData = updatedData; 
+                    renderParkStatus(parkStatusData); 
+                    console.log("Park durumu güncellendi:", parkStatusData);
+                }, (error) => {
+                    console.error("Park durumu dinlenirken hata oluştu:", error);
+                });
+
+             
+                
+    
+
+
+            } else {
+                userId = null;
+                console.log("Kullanıcı anonim olarak giriş yapacak.");
+                
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                } catch (error) {
+                    console.error("Firebase kimlik doğrulama hatası:", error);
+                }
+            }
+        });
+
+       
+        async function seedInitialData() {
+            const parkStatusCollectionRef = collection(db, `artifacts/${appId}/public/data/parkStatus`);
+            const snapshot = await getDoc(doc(parkStatusCollectionRef, "initial_data_check")); 
+            if (!snapshot.exists()) {
+                console.log("Veritabanı boş, başlangıç verileri ekleniyor...");
+                parkStatusData.forEach(async (item) => {
+                    await setDoc(doc(parkStatusCollectionRef, item.id.toString()), { ...item, timestamp: serverTimestamp() });
+                });
+                await setDoc(doc(parkStatusCollectionRef, "initial_data_check"), { seeded: true });
+                console.log("Başlangıç verileri başarıyla eklendi.");
+            } else {
+                console.log("Veritabanı zaten dolu, başlangıç verileri eklenmedi.");
+            }
+        }/*  */
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                seedInitialData();
+            }
+        });
+
+
+    </script>
+</body>
+</html>
