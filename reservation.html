@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randevu Al - Akıllı Park</title>
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .btn-primary {
+            background-color: #4a90e2; /* Blue */
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #a0aec0; /* Light gray */
+            color: white;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+    <div class="card p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-3xl font-bold mb-6 text-gray-800 text-center">Park Yeri Randevusu</h2>
+        <form id="reservationForm">
+            <div class="mb-4">
+                <label for="location" class="block text-gray-700 text-sm font-bold mb-2">Konum:</label>
+                <input type="text" id="location" placeholder="Örn: B3" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+            </div>
+            <div class="mb-6">
+                <label for="dateTime" class="block text-gray-700 text-sm font-bold mb-2">Tarih ve Saat:</label>
+                <input type="datetime-local" id="dateTime" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800">
+            </div>
+            <div class="flex justify-between items-center">
+                <button type="submit" class="btn-primary px-6 py-3 rounded-md font-medium text-lg">Randevu Al</button>
+                <a href="index.html" class="btn-secondary px-6 py-3 rounded-md font-medium text-lg">Ana Sayfaya Dön</a>
+            </div>
+        </form>
+        <div id="messageBox" class="mt-4 p-3 rounded-md hidden"></div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables for Firebase config and app ID
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let userId = null;
+
+        // Sign in anonymously or with custom token on page load
+        async function authenticateUser() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    console.log("Custom token ile giriş yapıldı.");
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Anonim olarak giriş yapıldı.");
+                }
+                userId = auth.currentUser ? auth.currentUser.uid : null;
+            } catch (error) {
+                console.error("Firebase kimlik doğrulama hatası:", error);
+            }
+        }
+        authenticateUser();
+
+
+        const reservationForm = document.getElementById('reservationForm');
+        const messageBox = document.getElementById('messageBox');
+
+        reservationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const location = document.getElementById('location').value;
+            const dateTime = document.getElementById('dateTime').value;
+
+            messageBox.classList.add('hidden'); // Hide previous messages
+
+            if (!location || !dateTime) {
+                showMessage('Lütfen tüm alanları doldurunuz.', 'bg-yellow-500');
+                return;
+            }
+
+            if (!userId) {
+                showMessage('Kullanıcı kimliği doğrulanamadı. Lütfen sayfayı yenileyin.', 'bg-red-500');
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/users/${userId}/reservations`), {
+                    location: location,
+                    dateTime: new Date(dateTime).toISOString(),
+                    timestamp: serverTimestamp()
+                });
+                console.log("Randevu kaydedildi:", { location, dateTime });
+                showMessage('Randevunuz başarıyla kaydedildi! Ana sayfaya yönlendiriliyorsunuz...', 'bg-green-500');
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirect to home page
+                }, 2000);
+            } catch (error) {
+                console.error("Randevu kaydedilirken hata oluştu:", error);
+                showMessage('Randevu kaydederken bir hata oluştu.', 'bg-red-500');
+            }
+        });
+
+        function showMessage(message, className) {
+            messageBox.textContent = message;
+            messageBox.className = `mt-4 p-3 rounded-md text-white ${className}`;
+            messageBox.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
